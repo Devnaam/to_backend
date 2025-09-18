@@ -1,22 +1,18 @@
-// backend/server.js
+// api/index.js
 
-// 1. IMPORT PACKAGES
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
 
-// 2. MIDDLEWARE
-// These lines are essential for our server to understand JSON and allow cross-origin requests.
+// MIDDLEWARE
 app.use(express.json());
 app.use(cors());
 
-// 3. CONNECT TO MONGODB
-// Paste your MongoDB connection string here. 
-// Replace <username>, <password>, and <dbname> with your actual credentials.
-const mongoURI = "mongodb://127.0.0.1:27017/my-todo-app-db";
+// CONNECT TO MONGODB ATLAS
+// This line now safely reads the connection string from your Vercel project's settings.
+const mongoURI = process.env.MONGO_URI;
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -27,10 +23,7 @@ mongoose.connect(mongoURI, {
   console.error("MongoDB connection error:", err);
 });
 
-// 4. DEFINE A SCHEMA AND MODEL
-// This is the blueprint for our to-do items.
-// backend/server.js
-
+// DEFINE A SCHEMA AND MODEL
 const todoSchema = new mongoose.Schema({
   text: {
     type: String,
@@ -40,15 +33,14 @@ const todoSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  // --- NEW FIELDS ---
   priority: {
     type: String,
-    enum: ['Low', 'Medium', 'High'], // Only allows these values
+    enum: ['Low', 'Medium', 'High'],
     default: 'Medium'
   },
   dueDate: {
     type: Date,
-    default: null // Can be empty
+    default: null
   },
   category: {
     type: String,
@@ -58,48 +50,55 @@ const todoSchema = new mongoose.Schema({
 
 const Todo = mongoose.model('Todo', todoSchema);
 
-// 5. API ROUTES (Our CRUD operations)
+// API ROUTES
 
-// GET all todos (Read)
+// GET all todos
 app.get('/todos', async (req, res) => {
-  const todos = await Todo.find();
-  res.json(todos);
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching todos" });
+  }
 });
 
-// POST a new todo (Create)
-// POST a new todo (Now accepts new fields)
+// POST a new todo
 app.post('/todos', async (req, res) => {
   const { text, priority, dueDate, category } = req.body;
-
-  const newTodo = new Todo({
-    text: text,
-    priority: priority,
-    dueDate: dueDate,
-    category: category
-  });
-
-  await newTodo.save();
-  res.status(201).json(newTodo);
+  try {
+    const newTodo = new Todo({ text, priority, dueDate, category });
+    await newTodo.save();
+    res.status(201).json(newTodo);
+  } catch (error) {
+    res.status(400).json({ message: "Error creating todo" });
+  }
 });
 
 // DELETE a todo
 app.delete('/todos/:id', async (req, res) => {
-  const result = await Todo.findByIdAndDelete(req.params.id);
-  res.json(result);
+  try {
+    const result = await Todo.findByIdAndDelete(req.params.id);
+    if (!result) return res.status(404).json({ message: "Todo not found" });
+    res.json({ message: "Todo deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting todo" });
+  }
 });
 
-// PUT (update) a todo to toggle completion
+// PUT (update) a todo
 app.put('/todos/:id', async (req, res) => {
     try {
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id, 
-            req.body, // Pass the entire request body to update
-            { new: true } // This option returns the modified document
+            req.body,
+            { new: true }
         );
+        if (!updatedTodo) return res.status(404).json({ message: "Todo not found" });
         res.json(updatedTodo);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
+// This line allows Vercel to use your Express app.
 module.exports = app;
