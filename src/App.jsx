@@ -109,7 +109,7 @@ function App() {
             <div className="todo-content" onClick={() => toggleTodoComplete(todo._id, todo.completed)}>
               <p>{todo.text}</p>
               <div className="todo-details">
-                <span className={`priority-tag priority-${todo.priority.toLowerCase()}`}>{todo.priority}</span>
+                 <span className={`priority-tag priority-${(todo.priority || 'medium').toLowerCase()}`}>{todo.priority || 'Medium'}</span>
                 <span className="category-badge">{todo.category}</span>
                 {todo.dueDate && <span className="due-date">Due: {formatDate(todo.dueDate)}</span>}
               </div>
