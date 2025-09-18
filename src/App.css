@@ -1,0 +1,141 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  color: #333;
+}
+
+.App {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #1c1e21;
+}
+
+/* --- New Form Styles --- */
+.add-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.add-task-form input[type="text"],
+.add-task-form input[type="date"],
+.add-task-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box; /* Important for padding */
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row > * {
+  flex: 1;
+}
+
+.add-task-form button {
+  padding: 12px 15px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.add-task-form button:hover {
+  background-color: #0056b3;
+}
+
+/* --- Updated Todo Item Styles --- */
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.todo-item:hover {
+  background-color: #f8f9fa;
+}
+
+.todo-content {
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.todo-content p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.todo-item.completed p {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.todo-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #555;
+}
+
+.priority-tag {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.priority-low { background-color: #28a745; }
+.priority-medium { background-color: #ffc107; color: #333}
+.priority-high { background-color: #dc3545; }
+
+.category-badge {
+  background-color: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: #495057;
+}
+
+.due-date {
+  font-style: italic;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
